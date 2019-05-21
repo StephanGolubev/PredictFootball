@@ -68,11 +68,11 @@ def main():
     train_data = data.sample(frac=0.7)
     test_data = data.loc[~data.index.isin(train_data.index)]
 
-    x_train = train_data[['K9', 'BB9', 'HR9']]
-    x_test = test_data[['K9', 'BB9', 'HR9']]
+    x_train = train_data[['pulls', 'hold', 'goals']]
+    x_test = test_data[['pulls', 'hold', 'goals']]
 
-    y_train = train_data[['ERA']]
-    y_test = test_data[['ERA']]
+    y_train = train_data[['truth']]
+    y_test = test_data[['truth']]
 
     '''
     test_df = pd.concat([x_test, y_test], axis=1)
@@ -80,11 +80,11 @@ def main():
     print(test_df.head(10))
     '''
 
-    data.loc[:,'nnERA'] = neural_network(x_train.values, y_train.values, 4, verbose=True,
-                                                 alpha=0.0000001, predict_data=data[['K9', 'BB9', 'HR9']])
+    data.loc[:,'predict'] = neural_network(x_train.values, y_train.values, 4, verbose=True,
+                                                 alpha=0.0000001, predict_data=data[['pulls', 'hold', 'goals']])
 
     writer = pd.ExcelWriter('Football.xlsx')
-    data.to_excel(writer,'nnERA')
+    data.to_excel(writer,'predict')
     writer.save()
 
 main()
